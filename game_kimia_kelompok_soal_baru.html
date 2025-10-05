@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game Kimia XI - Mode Kelompok</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f8ff;
+            padding: 40px;
+            max-width: 700px;
+            margin: auto;
+        }
+        #game-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        input, button, select {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        #feedback {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h2>🔐 Game Kimia Kelas XI: Unlock the Lab</h2>
+        <div id="group-select">
+            <p>Pilih Kelompok:</p>
+            <select id="groupName">
+                <option value="" disabled selected>-- Pilih Kelompok --</option>
+                <option value="Kelompok 1">Kelompok 1</option>
+                <option value="Kelompok 2">Kelompok 2</option>
+                <option value="Kelompok 3">Kelompok 3</option>
+                <option value="Kelompok 4">Kelompok 4</option>
+                <option value="Kelompok 5">Kelompok 5</option>
+                <option value="Kelompok 6">Kelompok 6</option>
+            </select>
+            <br>
+            <button onclick="startGame()">Mulai</button>
+        </div>
+
+        <div id="quiz" style="display:none;">
+            <button onclick="resetGame()" style="float: right; background-color: #eee;">🔁 Ganti Kelompok</button>
+            <p id="groupTitle"></p>
+            <p id="question"></p>
+            <input type="number" id="answerInput" placeholder="Masukkan angka">
+            <br>
+            <button onclick="checkAnswer()">Submit</button>
+            <p id="feedback"></p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+{ q: `1. Diketahui 32 gram gas SO₂ pada suhu 27°C dan 4 atm. Tentukan volumenya (L)`, a: 3.075 },
+{ q: `2. Jika Ar K = 39; Ar Cl = 35,5; Ar O = 16; Ar Na = 23; Ar C = 12; dan Ar H = 1,
+massa molekul relatif Na₂CO₃·10H₂O adalah…`, a: 286 },
+{ q: `3. Berapakah massa hidrogen dalam 360 gram glukosa (C₆H₁₂O₆)?`, a: 24 },
+{ q: `4. Cu + S → CuS. Jika 10 g Cu (Ar=63.5) dan 20 g S (Ar=32),
+tentukan mol zat sisa.`, a: 0.465 },
+{ q: `5. Koefisien H₂SO₄ untuk menyetarakan reaksi:
+Al + H₂SO₄ → Al₂(SO₄)₃ + H₂`, a: 3 }
+];
+
+        let currentQuestion = 0;
+        let selectedGroup = "";
+
+        function startGame() {
+            const group = document.getElementById("groupName").value;
+            if (!group) {
+                alert("Silakan pilih kelompok terlebih dahulu.");
+                return;
+            }
+
+            selectedGroup = group;
+            document.getElementById("group-select").style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+            document.getElementById("groupTitle").textContent = "👥 " + selectedGroup;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            document.getElementById("question").textContent = questions[currentQuestion].q;
+            document.getElementById("answerInput").value = "";
+            document.getElementById("feedback").textContent = "";
+        }
+
+        function checkAnswer() {
+            const userAnswer = parseFloat(document.getElementById("answerInput").value);
+            const correctAnswer = questions[currentQuestion].a;
+
+            if (Math.abs(userAnswer - correctAnswer) < 0.001) {
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    showQuestion();
+                } else {
+                    document.getElementById("quiz").innerHTML = `<h3>🎉 ${selectedGroup} berhasil menyelesaikan semua soal!</h3><p>Lab kimia berhasil dibuka!</p>`;
+                }
+            } else {
+                document.getElementById("feedback").textContent = "❌ Jawaban salah. Coba lagi.";
+            }
+        }
+
+        function resetGame() {
+            currentQuestion = 0;
+            selectedGroup = "";
+            document.getElementById("quiz").style.display = "none";
+            document.getElementById("group-select").style.display = "block";
+            document.getElementById("feedback").textContent = "";
+        }
+    </script>
+</body>
+</html>
